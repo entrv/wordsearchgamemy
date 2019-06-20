@@ -2,6 +2,7 @@ package com.aar.app.wordsearch.data.xml;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.util.Log;
 
 import com.aar.app.wordsearch.data.WordDataSource;
 import com.aar.app.wordsearch.model.Word;
@@ -45,8 +46,32 @@ public class WordXmlDataSource implements WordDataSource {
         }
         return new ArrayList<>();
     }
+    @Override
+    public List<Word> getWords(String gameThemeString) {
+        try {
+            XMLReader reader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+            SaxWordBankHandler wordBankHandler = new SaxWordBankHandler();
+            reader.setContentHandler(wordBankHandler);
+            reader.parse(getXmlInputSource(gameThemeString));
+
+            return wordBankHandler.getWords();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
 
     private InputSource getXmlInputSource() throws IOException {
         return new InputSource(mAssetManager.open(ASSET_WORD_BANK_FILE));
+    }
+    private InputSource getXmlInputSource(String gameThemeString) throws IOException {
+        String xmlFile = "";
+        if (gameThemeString.equals("") ) {
+            xmlFile = ASSET_WORD_BANK_FILE;
+        } else {
+            xmlFile = "words_" + gameThemeString.toLowerCase()  + ".xml";
+        }
+        Log.d("entrv",xmlFile);
+        return new InputSource(mAssetManager.open(xmlFile));
     }
 }

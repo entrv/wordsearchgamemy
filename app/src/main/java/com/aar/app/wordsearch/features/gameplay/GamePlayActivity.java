@@ -42,9 +42,12 @@ public class GamePlayActivity extends FullscreenActivity {
             "com.aar.app.wordsearch.features.gameplay.GamePlayActivity.ROW";
     public static final String EXTRA_COL_COUNT =
             "com.aar.app.wordsearch.features.gameplay.GamePlayActivity.COL";
+    public static final String EXTRA_GAME_THEME_STRING =
+            "com.aar.app.wordsearch.features.gameplay.GamePlayActivity.GAME_THEME_STRING";
 
     private static final StreakLineMapper STREAK_LINE_MAPPER = new StreakLineMapper();
 
+    int currentCount = 0;
     @Inject
     SoundPlayer mSoundPlayer;
 
@@ -119,7 +122,8 @@ public class GamePlayActivity extends FullscreenActivity {
             } else {
                 int rowCount = extras.getInt(EXTRA_ROW_COUNT);
                 int colCount = extras.getInt(EXTRA_COL_COUNT);
-                mViewModel.generateNewGameRound(rowCount, colCount);
+                String gameThemeString = extras.getString(EXTRA_GAME_THEME_STRING,"");
+                mViewModel.generateNewGameRound(rowCount, colCount, gameThemeString);
             }
         }
 
@@ -171,6 +175,8 @@ public class GamePlayActivity extends FullscreenActivity {
             }
 
             mSoundPlayer.play(SoundPlayer.Sound.Correct);
+            currentCount++;
+            showAnsweredWordsCount(currentCount);
         }
         else {
             mLetterBoard.popStreakLine();
@@ -265,6 +271,7 @@ public class GamePlayActivity extends FullscreenActivity {
     }
 
     private void showAnsweredWordsCount(int count) {
+        currentCount = count;
         mAnsweredTextCount.setText(String.valueOf(count));
     }
 

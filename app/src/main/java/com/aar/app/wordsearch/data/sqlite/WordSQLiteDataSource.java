@@ -48,4 +48,28 @@ public class WordSQLiteDataSource implements WordDataSource {
         c.close();
         return wordList;
     }
+    @Override
+    public List<Word> getWords(String gameThemeString) {
+        SQLiteDatabase db = mHelper.getReadableDatabase();
+
+        String cols[] = {
+                DbContract.WordBank._ID,
+                DbContract.WordBank.COL_STRING
+        };
+
+        Cursor c = db.query(DbContract.WordBank.TABLE_NAME, cols, null, null, null, null, null);
+
+        List<Word> wordList = new ArrayList<>();
+        if (c.moveToFirst()) {
+            while (!c.isAfterLast()) {
+
+                wordList.add(new Word(c.getInt(0), c.getString(1)));
+
+                c.moveToNext();
+            }
+        }
+
+        c.close();
+        return wordList;
+    }
 }

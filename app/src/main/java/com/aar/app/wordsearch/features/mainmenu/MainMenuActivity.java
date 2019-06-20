@@ -42,6 +42,7 @@ public class MainMenuActivity extends FullscreenActivity {
     MainMenuViewModel mViewModel;
     MultiTypeAdapter mAdapter;
 
+    String gameThemeString = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +60,10 @@ public class MainMenuActivity extends FullscreenActivity {
                 GameTheme.class,
                 R.layout.item_game_theme,
                 (model, holder) -> holder.<TextView>find(R.id.textThemeName).setText(model.getName()),
-                (model, view) -> Toast.makeText(MainMenuActivity.this, model.getName(), Toast.LENGTH_SHORT).show()
+                (model, view) -> {
+                    Toast.makeText(MainMenuActivity.this, model.getName(), Toast.LENGTH_SHORT).show();
+                    gameThemeString = model.getName();
+                }
         );
         mAdapter.addDelegate(
                 HistoryItem.class,
@@ -94,6 +98,7 @@ public class MainMenuActivity extends FullscreenActivity {
         Intent intent = new Intent(MainMenuActivity.this, GamePlayActivity.class);
         intent.putExtra(GamePlayActivity.EXTRA_ROW_COUNT, dim);
         intent.putExtra(GamePlayActivity.EXTRA_COL_COUNT, dim);
+        intent.putExtra(GamePlayActivity.EXTRA_GAME_THEME_STRING, gameThemeString);
         startActivity(intent);
     }
 

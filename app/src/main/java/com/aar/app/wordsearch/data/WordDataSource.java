@@ -11,5 +11,6 @@ import java.util.List;
 public interface WordDataSource {
 
     List<Word> getWords();
+    List<Word> getWords(String gameThmeString);
 
 }
